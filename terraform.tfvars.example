@@ -1,0 +1,139 @@
+#######################################################################
+# File: terraform.tfvars.example
+#
+# Description:
+#   Example Terraform variable values for AWS observability implementation.
+#   Copy this file to terraform.tfvars and customize the values.
+#
+# Purpose:
+#   Provide template configuration for different deployment scenarios
+#   with sensible defaults for development and production environments.
+#
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   # Edit terraform.tfvars with your specific values
+#   terraform plan -var-file="terraform.tfvars"
+#######################################################################
+
+# Project Configuration
+project_name = "aws-observability-demo"
+environment  = "development"  # Options: development, staging, production, testing, nonprod
+aws_region   = "us-east-1"
+
+# Networking Configuration
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+# EKS Configuration
+eks_cluster_name                = "observability-cluster"
+eks_node_group_instance_types   = ["t3.medium"]
+eks_node_group_desired_size     = 2
+eks_node_group_max_size         = 4
+eks_node_group_min_size         = 1
+
+# EC2 Configuration
+ec2_instance_type         = "t3.small"
+ec2_instance_count        = 2
+enable_detailed_monitoring = true
+
+# Prometheus Configuration
+prometheus_workspace_alias   = "observability-prometheus"
+enable_alertmanager         = true
+enable_recording_rules      = true
+create_default_rules        = true
+prometheus_retention_days   = 150
+prometheus_scrape_interval  = "30s"
+
+# Grafana Configuration
+grafana_workspace_name        = "observability-grafana"
+grafana_workspace_description = "AWS Managed Grafana workspace for observability demo with EC2 and EKS monitoring"
+grafana_version              = "9.4"
+enable_private_grafana       = false
+
+# Notification Configuration
+notification_email = ""  # Add your email address for notifications
+
+# CloudWatch Configuration
+cloudwatch_log_retention_days = 30
+enable_vpc_flow_logs         = true
+enable_cloudtrail           = true
+
+# ADOT Configuration
+enable_adot_addon = true
+adot_version     = "v0.88.0-eksbuild.1"
+
+# Sample Applications
+deploy_sample_apps = true
+
+# Cost Optimization (for non-production environments)
+enable_spot_instances = false  # Set to true for development/testing to save costs
+
+# Security Configuration
+allowed_cidr_blocks = ["0.0.0.0/0"]  # Restrict this in production environments
+enable_encryption   = true
+
+# Additional Tags
+additional_tags = {
+  Owner       = "DevOps Team"
+  CostCenter  = "Engineering"
+  Department  = "Platform"
+  Contact     = "devops@yourcompany.com"
+}
+
+#######################################################################
+# Production Environment Example
+#######################################################################
+# Uncomment and modify the following for production deployment:
+
+# project_name = "aws-observability-prod"
+# environment  = "production"
+
+# # Production EKS Configuration
+# eks_node_group_instance_types = ["m5.large"]
+# eks_node_group_desired_size   = 3
+# eks_node_group_max_size       = 6
+# eks_node_group_min_size       = 3
+
+# # Production EC2 Configuration
+# ec2_instance_type   = "m5.large"
+# ec2_instance_count  = 3
+# enable_spot_instances = false  # Always false for production
+
+# # Production Grafana Configuration
+# enable_private_grafana = true  # Enable private VPC deployment
+
+# # Production Security
+# allowed_cidr_blocks = ["10.0.0.0/8", "172.16.0.0/12"]  # Restrict access
+# enable_encryption   = true
+
+# # Production Monitoring
+# prometheus_retention_days     = 365
+# cloudwatch_log_retention_days = 90
+# enable_detailed_monitoring    = true
+
+#######################################################################
+# Development Environment Example
+#######################################################################
+# For cost-optimized development environment:
+
+# project_name = "aws-observability-dev"
+# environment  = "development"
+
+# # Development cost optimizations
+# eks_node_group_instance_types = ["t3.small"]
+# eks_node_group_desired_size   = 1
+# eks_node_group_max_size       = 2
+# eks_node_group_min_size       = 1
+
+# ec2_instance_type   = "t3.micro"
+# ec2_instance_count  = 1
+# enable_spot_instances = true  # Save costs in development
+
+# # Reduced retention for development
+# prometheus_retention_days     = 30
+# cloudwatch_log_retention_days = 7
+
+# # Disable expensive features for development
+# enable_detailed_monitoring = false
+# enable_vpc_flow_logs      = false
+# enable_cloudtrail         = false
